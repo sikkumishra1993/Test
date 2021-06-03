@@ -8,3 +8,16 @@ then
 else
   mkdir test
 fi
+
+read -p "are you 21 or over : " ANSWER
+case "$ANSWER" in
+    [yY] | [yY][eE][sS])
+        echo "you can have beer :)"
+        ;;
+    [nN] | [nN][oO])
+        echo "you can not have beer"
+        ;;
+    *)
+        echo "please enter y/yes or n/no"
+        ;;
+esac
