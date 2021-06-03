@@ -1,3 +1,10 @@
 #!/bin/bash
 echo "Hello world"
-mkdir test
+FILE=test
+
+if [ -d "$FILE" ]
+then
+  echo "file already exist"
+else
+  mkdir test
+fi
