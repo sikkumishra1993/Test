@@ -47,3 +47,23 @@
 #         echo "$LINE : $LINE_CURRENT"
 #         ((LINE++))
 #     done <"./1.txt"
+
+# Function
+# function sayHello(){
+#     echo "Hello World!!"
+# }
+
+# sayHello
+
+#Prameterized function
+
+# function greet(){
+#     echo "Hello, i am $1 and i am $2"
+# }
+
+# greet "Shashi" "22"
+
+# mkdir hello
+# touch "hello/hello.txt"
+# echo "Hello Workd" >> "hello/hello.txt"
+# echo "created file"
