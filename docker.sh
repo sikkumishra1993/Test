@@ -21,9 +21,21 @@
 #        echo "please enter y/yes or n/no"
 #        ;;
 #esac
-NAMES="Shashi Ravi Rashmi Priyanka"
+# NAMES="Shashi Ravi Rashmi Priyanka"
 
-for NAME in $NAMES
-    do
-        echo "Hello $NAMES"
-done
+# for NAME in $NAMES
+#     do
+#         echo "Hello $NAMES"
+# done
+
+# touch 1.txt 2.txt 3.txt
+
+# FILES=$(ls *.txt)
+# NEW="new"
+
+# for FILE in $FILES
+#     do
+#         echo "Renaming $FILE to new-$FILE"
+#         mv $FILE $NEW-$FILE
+#     done
+
