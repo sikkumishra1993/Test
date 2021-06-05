@@ -66,4 +66,4 @@
 # mkdir hello
 # touch "hello/hello.txt"
 # echo "Hello Workd" >> "hello/hello.txt"
-# echo "created file"
+echo "created file"
