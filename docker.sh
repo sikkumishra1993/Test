@@ -39,3 +39,11 @@
 #         mv $FILE $NEW-$FILE
 #     done
 
+# Readig a file line by line
+# LINE=1
+
+# while read -r  LINE_CURRENT
+#     do
+#         echo "$LINE : $LINE_CURRENT"
+#         ((LINE++))
+#     done <"./1.txt"
