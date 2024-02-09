@@ -1,0 +1,57 @@
+using IronBarCode;
+using IronSoftware.Drawing;
+using System;
+using System.Collections.Generic;
+
+namespace BarcodeGenerator
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Get the user inputs
+            Console.WriteLine("Enter your name:");
+            string name = Console.ReadLine();
+            Console.WriteLine("Enter your surname:");
+            string surname = Console.ReadLine();
+            Console.WriteLine("Enter your account number:");
+            string accountNumber = Console.ReadLine();
+
+            // Create a list of barcode objects with the user inputs and the barcode type
+            List<BarcodeWriter> barcodes = new List<BarcodeWriter>()
+            {
+                new BarcodeWriter(name, BarcodeWriterEncoding.Code128),
+                new BarcodeWriter(surname, BarcodeWriterEncoding.Code128),
+                new BarcodeWriter(accountNumber, BarcodeWriterEncoding.Code128)
+            };
+
+            // Set the barcode image format to PNG
+            foreach (var barcode in barcodes)
+            {
+                barcode.Format = System.Drawing.Imaging.ImageFormat.Png;
+            }
+
+            // The path of the folder to save the TIFF file
+            string outputPath = @"C:\Users\bigboss\output\";
+
+            // Convert the barcodes to AnyBitmap objects
+            List<AnyBitmap> images = new List<AnyBitmap>();
+            foreach (var barcode in barcodes)
+            {
+                images.Add(AnyBitmap.FromImage(barcode.ToImage()));
+            }
+
+            // Convert the images to a multipage TIFF object
+            AnyBitmap tiffImage = AnyBitmap.CreateMultiFrameTiff(images);
+
+            // Append the current date time to the file name
+            string fileName = "barcodes_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".tiff";
+
+            // Save the TIFF file to the output folder
+            tiffImage.SaveAs(outputPath + fileName);
+
+            // Print a message to indicate the completion of the task
+            Console.WriteLine("Barcodes generated and saved successfully.");
+        }
+    }
+}
