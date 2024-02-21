@@ -1,0 +1,70 @@
+using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+
+namespace TiffMerge
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Get the tiff files in the folder
+            string folder = @"c:\xyz";
+            string[] files = Directory.GetFiles(folder, "*.tif");
+
+            // Check if there are at least two files
+            if (files.Length < 2)
+            {
+                Console.WriteLine("No tiff files to merge in the folder.");
+                return;
+            }
+
+            // Get the codec for tiff files
+            ImageCodecInfo tiffCodec = null;
+            foreach (ImageCodecInfo codec in ImageCodecInfo.GetImageEncoders())
+            {
+                if (codec.MimeType == "image/tiff")
+                {
+                    tiffCodec = codec;
+                    break;
+                }
+            }
+
+            // Create an encoder parameter for multi-frame tiff
+            Encoder saveFlag = Encoder.SaveFlag;
+            EncoderParameter multiFrame = new EncoderParameter(saveFlag, (long)EncoderValue.MultiFrame);
+            EncoderParameters encoderParams = new EncoderParameters(1);
+            encoderParams.Param[0] = multiFrame;
+
+            // Create the output file name
+            string output = Path.Combine(folder, "merged.tif");
+
+            // Create the first frame
+            Bitmap firstImage = (Bitmap)Image.FromFile(files[0]);
+            firstImage.Save(output, tiffCodec, encoderParams);
+
+            // Add the subsequent frames
+            multiFrame = new EncoderParameter(saveFlag, (long)EncoderValue.FrameDimensionPage);
+            encoderParams.Param[0] = multiFrame;
+            for (int i = 1; i < files.Length; i++)
+            {
+                // Load the image and get the frame count
+                Bitmap image = (Bitmap)Image.FromFile(files[i]);
+                int frameCount = image.GetFrameCount(FrameDimension.Page);
+
+                // Add each frame to the output file
+                for (int j = 0; j < frameCount; j++)
+                {
+                    image.SelectActiveFrame(FrameDimension.Page, j);
+                    firstImage.SaveAdd(image, encoderParams);
+                }
+            }
+
+            // Flush and close the output file
+            multiFrame = new EncoderParameter(saveFlag, (long)EncoderValue.Flush);
+            encoderParams.Param[0] = multiFrame;
+            firstImage.SaveAdd(encoderParams);
+        }
+    }
+}
