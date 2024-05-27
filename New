@@ -1,0 +1,27 @@
+using System;
+using System.IO;
+
+class Program
+{
+    static void Main()
+    {
+        // Define the path to the text file
+        string path = @"xyz\abc\yourfile.txt";
+
+        // Check if the file exists
+        if (File.Exists(path))
+        {
+            // Read the content of the file
+            string content = File.ReadAllText(path);
+
+            // Display the content to the console
+            Console.WriteLine("File Content:");
+            Console.WriteLine(content);
+        }
+        else
+        {
+            // Inform the user if the file does not exist
+            Console.WriteLine("File not found at the specified path: " + path);
+        }
+    }
+}
