@@ -1,0 +1,76 @@
+using System;
+using System.IO;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Tiff;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+
+class Program
+{
+    static void Main()
+    {
+        try
+        {
+            string inputFolder = @"C:\shashi\SampleImage\input";
+            string outputFolder = @"C:\shashi\SampleImage\output";
+
+            // Get all TIFF files in the folder
+            string[] tiffFiles = Directory.GetFiles(inputFolder, "*.tiff");
+
+            if (tiffFiles.Length == 0)
+            {
+                Console.WriteLine("No TIFF files found in path");
+                return;
+            }
+
+            double cropPercentage = 47;
+
+            foreach (string imagePath in tiffFiles)
+            {
+                ProcessTiff(imagePath, cropPercentage, outputFolder);
+            }
+
+            Console.WriteLine("All TIFF files processed");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+    }
+
+    static void ProcessTiff(string imagePath, double cropPercentage, string outputFolder)
+    {
+        try
+        {
+            string outputPath = Path.Combine(outputFolder, Path.GetFileName(imagePath));
+            using (Image<Rgba32> image = Image.Load<Rgba32>(imagePath))
+            {
+                int originalWidth = image.Width;
+                int originalHeight = image.Height;
+                Console.WriteLine($"Original image dimensions: {originalWidth} x {originalHeight} pixels");
+
+                int cropWidth = (int)(originalWidth * (cropPercentage / 100.0));
+                int height = originalHeight;
+
+                // Crop the image to 47% of the original width from the left side
+                image.Mutate(x => x.Crop(new Rectangle(0, 0, cropWidth, height)));
+
+                // Print the dimensions of the cropped image
+                Console.WriteLine($"Cropped image dimensions: {cropWidth} x {height} pixels");
+
+                // Save the cropped image
+                image.Save(outputPath, new TiffEncoder());
+
+                // Print the size and dimensions of the generated image
+                FileInfo fileInfo = new FileInfo(outputPath);
+                Console.WriteLine($"Processed image: {outputPath}");
+                Console.WriteLine($"Image size: {fileInfo.Length / 1024.0} KB");
+                Console.WriteLine($"Image dimensions: {cropWidth} x {height} pixels");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing image: {ex.Message}");
+        }
+    }
+}
